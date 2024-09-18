@@ -1,0 +1,5 @@
+org\sgorski\service\CompareService.class
+org\sgorski\service\FileService.class
+org\sgorski\Compare.class
+org\sgorski\Main.class
+org\sgorski\service\ConfigFileService.class
