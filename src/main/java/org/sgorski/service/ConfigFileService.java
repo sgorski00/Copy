@@ -59,7 +59,7 @@ public class ConfigFileService {
         Compare compare = null;
         try {
             compare = Compare.valueOf(lengthComparator);
-            log.info("Lenght comparator: {}", compare);
+            log.info("Length comparator: {}", compare);
 
         }catch (IllegalArgumentException e){
             if(!lengthComparator.isEmpty()) {

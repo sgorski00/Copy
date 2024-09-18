@@ -49,7 +49,7 @@ public class FileService {
                             log.info("Przeniesiono plik: {}, do folderu: {}", file.getName(), destinationPath);
                         } catch (IOException e) {
                             log.error("Błąd podczas przenoszenia pliku: {}, do folderu: {}", file.getName(), destinationPath);
-                            log.error(e.getStackTrace());
+                            e.getStackTrace();
                         }
                     }
                 });
