@@ -8,6 +8,7 @@ import org.sgorski.Compare;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class ConfigFileService {
@@ -26,31 +27,34 @@ public class ConfigFileService {
         return iniPrefs;
     }
 
-    public String getSourceDir() {
-        log.info("Config file name: {}", FILENAME);
-        String sourceDir = getField("SourceDirection");
+    public String getSourceDir(int taskNumber) {
+        String sourceDir = getField(taskNumber, "SourceDirectory");
         log.info("Source directory: {}", sourceDir);
         return sourceDir;
     }
 
-    public String getDestinationDir() {
-        String destinationDir = getField("DestinationDirection");
+    public String getDestinationDir(int taskNumber) {
+        String destinationDir = getField(taskNumber, "DestinationDirectory");
         log.info("Destination directory: {}", destinationDir);
         return destinationDir;
     }
 
-    public String[] getExtensions() {
-        String extensionsString = getField("Extensions");
+    public String[] getExtensions(int taskNumber) {
+        String extensionsString = getField(taskNumber, "Extensions");
         String[] extensions = extensionsString.split(",");
         for(String ex : extensions){
-            ex = '.' + ex;
+            if(extensions.length == 1 && ex.isEmpty()){
+                ex = ".*";
+            }else{
+                ex = '.' + ex.trim();
+            }
             log.info("Extension from list: {}", ex);
         }
         return extensions;
     }
 
-    public Compare getLengthComparator() {
-        String lengthComparator = getField("LengthComparator")
+    public Compare getLengthComparator(int taskNumber) {
+        String lengthComparator = getField(taskNumber, "LengthComparator")
                 .toUpperCase();
         Compare compare = null;
         try {
@@ -66,8 +70,8 @@ public class ConfigFileService {
         return compare;
     }
 
-    public int getFileLength(){
-        String lengthString = getField("FileLength");
+    public int getFileLength(int taskNumber){
+        String lengthString = getField(taskNumber, "FileLength");
         int length = 0;
         try {
             length = Integer.parseInt(lengthString);
@@ -85,9 +89,20 @@ public class ConfigFileService {
         return length;
     }
 
-    private String getField(String FileLength) {
+    private String getField(int taskNumber, String variable) {
+        String[] tasks = getConfigurationChildren();
         return getIniPreferences(FILENAME)
-                .node("Application")
-                .get(FileLength, null);
+                .node(tasks[taskNumber])
+                .get(variable, null);
+    }
+
+    public String[] getConfigurationChildren(){
+        try {
+            return getIniPreferences(FILENAME).childrenNames();
+        } catch (BackingStoreException e) {
+            log.error("Something went wrong with configuration file!");
+            System.exit(1);
+            return new String[]{"FirstTask"};
+        }
     }
 }

@@ -17,13 +17,16 @@ public class FileService {
     private static final Logger log = LogManager.getLogger(FileService.class);
     private final ConfigFileService configFileService = new ConfigFileService();
 
-    public void copyFiles() {
-        String sourceDir = configFileService.getSourceDir();
-        String destDir = configFileService.getDestinationDir();
-        String[] extensions = configFileService.getExtensions();
-        Compare comparator = configFileService.getLengthComparator();
-        int nameLength = configFileService.getFileLength();
+    public void copyFiles(int taskNumber) {
         log.info("========================================");
+        log.info("Task number: {}", taskNumber + 1);
+        String sourceDir = configFileService.getSourceDir(taskNumber);
+        String destDir = configFileService.getDestinationDir(taskNumber);
+        String[] extensions = configFileService.getExtensions(taskNumber);
+        Compare comparator = configFileService.getLengthComparator(taskNumber);
+        int nameLength = configFileService.getFileLength(taskNumber);
+        log.info("========================================");
+        log.info("Moved files:");
 
         File sourceFolder = getFile(sourceDir);
         File destinationFolder = getFile(destDir);
@@ -53,11 +56,14 @@ public class FileService {
             }else {
                 log.info("No files were found with extension: {}, in the {} path", ext, sourceDir);
             }
-
         }
     }
 
     private File getFile(String path) {
         return new File(path);
+    }
+
+    public int getNumberOfTasks(){
+        return configFileService.getConfigurationChildren().length;
     }
 }

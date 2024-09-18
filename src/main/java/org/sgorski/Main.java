@@ -7,6 +7,9 @@ public class Main {
     private static final FileService fileService = new FileService();
 
     public static void main(String[] args) {
-        fileService.copyFiles();
+        int numberOfTasks = fileService.getNumberOfTasks();
+        for(int taskNumber = 0; taskNumber<numberOfTasks; taskNumber++) {
+            fileService.copyFiles(taskNumber);
+        }
     }
 }
