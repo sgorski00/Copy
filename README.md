@@ -6,13 +6,17 @@ This program is configurated via config.ini file (included in the project files)
 The config.ini file must be in the same path as .jar file.
 
 ### config.ini
-There are 5 configuration fields:
+There are 6 configuration fields:
+* Operation
+  - It must not be empty.
+  - There should be one of three handled operation: COPY, MOVE or DELETE
 * SourceDirectory
   - It must not be empty.
   - Enter there the full path of directory from which files should be moved.
   - If there is a backslash '\' in the path, you need to enter two backslashes instead of one. (For the network paths it should start like this: \\\\192.168.0.1\\directory)
 * DestinationDirectory
   - The same as above, but for the target directory
+  - It can be empty for the DELETE operation
 * Extensions
   - This field is stored as table.
   - The extensions should be wrote one after one, separated with comma (eg. Extensions=xml,pdf,txt)
@@ -26,10 +30,11 @@ There are 5 configuration fields:
   - Can not be less than 0
 
  
-### How to move every file?
+### How to execute task for every file in the path?
 To move every file the config.ini should look like this:
 ```
 [Application]
+Operation=MOVE
 SourceDirectory=C:\\source\\directory
 DestinationDirectory=C:\\some\\other\\directory
 Extensions=*

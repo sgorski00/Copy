@@ -5,9 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.ini4j.Ini;
 import org.ini4j.IniPreferences;
 import org.sgorski.Compare;
+import org.sgorski.Operation;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -87,6 +89,20 @@ public class ConfigFileService {
             System.exit(1);
         }
         return length;
+    }
+
+    public Operation getOperation(int taskNumber){
+        String operationString = getField(taskNumber, "Operation")
+                .toUpperCase();
+        Operation operation = null;
+        try{
+            operation = Operation.valueOf(operationString);
+            log.info("Operation: {}", operation.name());
+        }catch (IllegalArgumentException e){
+            log.error("Wrong operation type: {}", operationString);
+            System.exit(1);
+        }
+        return operation;
     }
 
     private String getField(int taskNumber, String variable) {

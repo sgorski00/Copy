@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         int numberOfTasks = fileService.getNumberOfTasks();
         for(int taskNumber = 0; taskNumber<numberOfTasks; taskNumber++) {
-            fileService.copyFiles(taskNumber);
+            fileService.executeTask(taskNumber);
         }
     }
 }
