@@ -29,6 +29,7 @@ public class FileService {
         String[] extensions = configFileService.getExtensions(taskNumber);
         Compare comparator = configFileService.getLengthComparator(taskNumber);
         int nameLength = configFileService.getFileLength(taskNumber);
+        String filenamePattern = configFileService.getFilenamePattern(taskNumber);
         log.info("========================================");
         log.info("          * Task execution *");
         log.info("========================================");
@@ -38,7 +39,7 @@ public class FileService {
 
         for (String ext : extensions) {
             Optional<File[]> oFiles = Optional.ofNullable(sourceFolder.listFiles(
-                    (dir, names) -> names.endsWith(ext)
+                    (dir, name) -> name.matches(filenamePattern + "\\." + ext)
             ));
 
             if(oFiles.isPresent()) {
@@ -65,6 +66,11 @@ public class FileService {
     private static void handleOperation(File file, File destinationFolder, Operation operation) throws IOException {
         Path sourcePath = file.toPath();
         Path destinationPath = destinationFolder.toPath().resolve(file.getName());
+
+        if(Files.exists(destinationPath)) {
+            return;
+        }
+
         if(operation.equals(Operation.MOVE) && !destinationFolder.toString().isEmpty()) {
             Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
             log.info("The file: {}, has been moved to: {}", file.getName(), destinationPath);

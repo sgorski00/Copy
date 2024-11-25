@@ -9,7 +9,6 @@ import org.sgorski.Operation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -46,13 +45,22 @@ public class ConfigFileService {
         String[] extensions = extensionsString.split(",");
         for(String ex : extensions){
             if(extensions.length == 1 && ex.isEmpty()){
-                ex = ".*";
+                ex = "*";
             }else{
-                ex = '.' + ex.trim();
+                ex = ex.trim();
             }
             log.info("Extension from list: {}", ex);
         }
         return extensions;
+    }
+
+    public String getFilenamePattern(int taskNumber) {
+        String filenamePattern = getField(taskNumber, "FilenamePattern");
+        if (filenamePattern == null || filenamePattern.isEmpty()) {
+            filenamePattern = ".*";
+        }
+        log.info("Filename pattern: {}", filenamePattern);
+        return filenamePattern;
     }
 
     public Compare getLengthComparator(int taskNumber) {
